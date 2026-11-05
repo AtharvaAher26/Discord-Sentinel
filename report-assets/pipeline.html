@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #ffffff; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .canvas { width: 920px; height: 950px; position: relative; background: #ffffff; padding: 16px 10px; }
+  .step {
+    position: absolute; left: 70px; width: 480px; border-radius: 9px;
+    border: 2px solid #1a4a7a; background: #eef3fa; padding: 9px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .step .n {
+    min-width: 34px; height: 34px; border-radius: 50%; background: #1a4a7a;
+    color: #ffffff; font-size: 17px; font-weight: 700; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .step h4 { font-size: 19px; color: #142840; font-weight: 700; line-height: 1.2; }
+  .step p { font-size: 14.5px; color: #5a7a96; line-height: 1.3; margin-top: 2px; }
+  .gate { background: #dcebf7; border-style: solid; border-width: 2.5px; }
+  .band { left: 640px; width: 250px; border-radius: 9px; padding: 10px 12px; position: absolute; text-align: center; }
+  .band h5 { font-size: 16.5px; color: #142840; }
+  .band p { font-size: 13.5px; color: #5a7a96; margin-top: 3px; line-height: 1.3; }
+  .b-safe { background: #eaf5ee; border: 2px solid #3a8a5a; }
+  .b-susp { background: #fdf3e4; border: 2px solid #b37a2d; }
+  .b-mal  { background: #f9e9e9; border: 2px solid #a83a3a; }
+  svg.wires { position: absolute; inset: 0; width: 920px; height: 950px; pointer-events: none; }
+  .elbl { position: absolute; font-size: 13.5px; font-weight: 700; background:#ffffff; padding: 1px 5px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <svg class="wires">
+    <defs>
+      <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L8,4.5 L0,9 z" fill="#2d7ab3"/>
+      </marker>
+      <marker id="arrg" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L8,4.5 L0,9 z" fill="#3a8a5a"/>
+      </marker>
+      <marker id="arro" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L8,4.5 L0,9 z" fill="#b37a2d"/>
+      </marker>
+      <marker id="arrm" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L8,4.5 L0,9 z" fill="#a83a3a"/>
+      </marker>
+    </defs>
+    <line x1="310" y1="78"  x2="310" y2="104" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="310" y1="208" x2="310" y2="232" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="310" y1="308" x2="310" y2="332" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="310" y1="408" x2="310" y2="432" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="310" y1="508" x2="310" y2="532" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="310" y1="608" x2="310" y2="632" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="310" y1="718" x2="310" y2="762" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- verdict -> bands -->
+    <line x1="552" y1="780" x2="636" y2="678" stroke="#3a8a5a" stroke-width="2" marker-end="url(#arrg)"/>
+    <line x1="554" y1="800" x2="636" y2="742" stroke="#b37a2d" stroke-width="2" marker-end="url(#arro)"/>
+    <line x1="548" y1="822" x2="636" y2="808" stroke="#a83a3a" stroke-width="2" marker-end="url(#arrm)"/>
+  </svg>
+
+  <div class="step" style="top:36px;"><div class="n">1</div><div><h4>Message received</h4><p>on_message — guild text messages only</p></div></div>
+  <div class="step gate" style="top:136px;"><div class="n">2</div><div><h4>Exemption gate</h4><p>staff · bots · allowlisted users / roles · appeal channel</p></div></div>
+  <div class="step" style="top:236px;"><div class="n">3</div><div><h4>URL extraction</h4><p>content + embeds; shortlinks expanded to final destination</p></div></div>
+  <div class="step" style="top:336px;"><div class="n">4</div><div><h4>Layer 1 — reputation</h4><p>in-memory sets → Sinking Yachts → Safe Browsing (cached)</p></div></div>
+  <div class="step" style="top:436px;"><div class="n">5</div><div><h4>Layer 2 — URL anatomy</h4><p>brand confusion · homoglyphs · TLD · path · IP hosts</p></div></div>
+  <div class="step" style="top:536px;"><div class="n">6</div><div><h4>Layer 3 — content patterns</h4><p>Nitro copy · grabber phrasing · webhook exfil · attachments</p></div></div>
+  <div class="step" style="top:636px;"><div class="n">7</div><div><h4>Layer 4 — behavior windows</h4><p>mention storms · DM-burst proxy · fresh links · new accounts</p></div></div>
+  <div class="step gate" style="top:768px; width:480px;"><div class="n">8</div><div><h4>Score fusion → verdict</h4><p>Σ weights + synergies, × sensitivity profile, intel-outage cap</p></div></div>
+
+  <div class="band b-safe" style="top:640px;">
+    <h5>SAFE · 0-29</h5><p>audit row only — no action</p>
+  </div>
+  <div class="band b-susp" style="top:706px;">
+    <h5>SUSPICIOUS · 30-69</h5><p>delete message (+ warn DM at 50+)</p>
+  </div>
+  <div class="band b-mal" style="top:772px;">
+    <h5>MALICIOUS · 70-100</h5><p>delete + warn + reversible quarantine</p>
+  </div>
+</div>
+</body>
+</html>

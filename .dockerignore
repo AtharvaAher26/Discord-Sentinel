@@ -1,0 +1,11 @@
+.git
+.env
+*.db
+*.db-wal
+*.db-shm
+__pycache__
+.pytest_cache
+tests
+report-assets
+*.md
+!.env.example

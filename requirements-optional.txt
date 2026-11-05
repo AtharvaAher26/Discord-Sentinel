@@ -1,0 +1,5 @@
+# Optional features - install alongside requirements.txt if wanted.
+# QR-code scam scanning (sentinel/qrscan.py). Without this, QR images
+# are simply not decoded; everything else works.
+opencv-python-headless>=4.8.0
+numpy>=1.26.0

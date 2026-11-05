@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #ffffff; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .canvas { width: 920px; height: 900px; position: relative; background: #ffffff; padding: 18px 10px; }
+  .node {
+    position: absolute; border-radius: 10px; border: 2px solid #1a4a7a;
+    background: #eef3fa; padding: 10px 14px; text-align: center;
+  }
+  .node.entry { background: #e4ecf5; }
+  .node.core { background: #dcebf7; border-width: 2.5px; }
+  .node.action { background: #e4ecf5; }
+  .node.store { background: #f2f6fb; border-style: dashed; }
+  .node h4 { font-size: 20px; color: #142840; font-weight: 700; line-height: 1.25; }
+  .node p { font-size: 15px; color: #5a7a96; line-height: 1.35; margin-top: 4px; }
+  .wide { display: flex; gap: 10px; justify-content: center; align-items: stretch; padding: 10px 16px; }
+  .chip {
+    flex: 1; background: #ffffff; border: 1.5px solid #2d7ab3; border-radius: 7px;
+    padding: 8px 6px; text-align: center;
+  }
+  .chip b { display: block; font-size: 17px; color: #1a4a7a; }
+  .chip span { display: block; font-size: 13.5px; color: #5a7a96; margin-top: 3px; line-height: 1.25; }
+  .layerlabel { font-size: 14px; color: #2d7ab3; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  svg.wires { position: absolute; inset: 0; width: 920px; height: 900px; pointer-events: none; }
+  .lbl { position: absolute; font-size: 13.5px; color: #2d7ab3; background: #ffffff; padding: 1px 6px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <svg class="wires">
+    <defs>
+      <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L8,4.5 L0,9 z" fill="#2d7ab3"/>
+      </marker>
+      <marker id="arrd" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L8,4.5 L0,9 z" fill="#7a9bb8"/>
+      </marker>
+    </defs>
+    <!-- entries -> scanner -->
+    <line x1="270" y1="112" x2="380" y2="164" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="660" y1="112" x2="548" y2="164" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- scanner -> layers -->
+    <line x1="464" y1="258" x2="464" y2="300" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- intel -> layers (side) -->
+    <line x1="812" y1="392" x2="700" y2="392" stroke="#7a9bb8" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrd)"/>
+    <!-- layers -> scorer -->
+    <line x1="464" y1="484" x2="464" y2="532" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- scorer -> enforcer -->
+    <line x1="464" y1="608" x2="464" y2="656" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- enforcer -> modlog / store -->
+    <line x1="386" y1="740" x2="266" y2="774" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="542" y1="740" x2="662" y2="774" stroke="#2d7ab3" stroke-width="2" marker-end="url(#arr)"/>
+  </svg>
+
+  <!-- Row 1: entries -->
+  <div class="node entry" style="left:150px; top:36px; width:240px;">
+    <h4>Discord Messages</h4>
+    <p>gateway events, attachments, embeds</p>
+  </div>
+  <div class="node entry" style="left:540px; top:36px; width:240px;">
+    <h4>Staff Slash Commands</h4>
+    <p>/setup · /config · /release …</p>
+  </div>
+
+  <!-- Row 2: scanner -->
+  <div class="node core" style="left:280px; top:168px; width:370px;">
+    <h4>Scanner Pipeline (cogs/scanner.py)</h4>
+    <p>exemption gate: staff · allowlist · appeal channel · bots</p>
+  </div>
+
+  <!-- Row 3: layers + intel -->
+  <div class="node" style="left:60px; top:304px; width:640px;">
+    <div class="layerlabel">Detection Layers</div>
+    <div class="wide" style="padding:0;">
+      <div class="chip"><b>L1 Reputation</b><span>SY · URLhaus · GSB</span></div>
+      <div class="chip"><b>L2 URL Check</b><span>brand · homoglyph · TLD</span></div>
+      <div class="chip"><b>L3 Content</b><span>scam copy · attachments</span></div>
+      <div class="chip"><b>L4 Behavior</b><span>bursts · fresh links</span></div>
+    </div>
+  </div>
+  <div class="node store" style="left:742px; top:330px; width:158px;">
+    <h4 style="font-size:17px;">Threat Feeds</h4>
+    <p style="font-size:13.5px;">live websocket + HTTP</p>
+  </div>
+
+  <!-- Row 4: scorer -->
+  <div class="node core" style="left:300px; top:536px; width:330px;">
+    <h4>Scorer — Weighted Fusion</h4>
+    <p>0-100 verdict · SAFE / SUSPICIOUS / MALICIOUS</p>
+  </div>
+
+  <!-- Row 5: enforcer -->
+  <div class="node core" style="left:300px; top:660px; width:330px;">
+    <h4>Enforcer — Reversible Ladder</h4>
+    <p>delete → warn DM → quarantine + snapshot</p>
+  </div>
+
+  <!-- Row 6: outputs -->
+  <div class="node action" style="left:96px; top:778px; width:270px;">
+    <h4 style="font-size:17px;">Modlog Evidence</h4>
+    <p style="font-size:13.5px;">metadata-only embeds</p>
+  </div>
+  <div class="node store" style="left:560px; top:778px; width:270px;">
+    <h4 style="font-size:17px;">SQLite Store (WAL)</h4>
+    <p style="font-size:13.5px;">settings · allowlist · audit · snapshots</p>
+  </div>
+</div>
+</body>
+</html>
